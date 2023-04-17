@@ -1,6 +1,8 @@
+
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -15,6 +17,10 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file("local.properties").newDataInputStream())
+        buildConfigField "String", "apiKey", "${properties.getProperty('apiKey')}"
     }
 
     buildTypes {
@@ -30,15 +36,38 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    viewBinding {
+        enabled = true
+    }
+
 }
 
 dependencies {
+    def okhttp_version = '5.0.0-alpha.11'
+    def gson_version = "2.10.1"
 
-    implementation 'androidx.core:core-ktx:1.7.0'
+
+    implementation 'androidx.core:core-ktx:1.10.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
+
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    // okhttp and gson
+    implementation("com.squareup.okhttp3:okhttp:$okhttp_version")
+    implementation("com.squareup.okhttp3:logging-interceptor:$okhttp_version")
+    implementation("com.google.code.gson:gson:$gson_version")
+
+    // fragment
+    implementation("androidx.fragment.:fragment-ktx:1.5.6")
+
+    // EditDrawableText
+    implementation 'com.github.MindorksOpenSource:EditDrawableText:1.1.0'
+
+    // splash screen
+    implementation("androidx.core:core-splashscreen:1.0.0")
+
 }
