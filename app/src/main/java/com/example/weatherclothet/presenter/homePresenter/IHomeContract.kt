@@ -7,6 +7,8 @@ interface IHomeContract {
     interface IView {
         fun showWeatherData(weatherResponse: WeatherResponse)
         fun showError(error: IOException)
+        fun showLoading()
+        fun hideLoading()
     }
 
     interface IPresenter {

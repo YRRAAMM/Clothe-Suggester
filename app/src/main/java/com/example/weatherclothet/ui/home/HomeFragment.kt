@@ -1,10 +1,10 @@
 package com.example.weatherclothet.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import com.example.weatherclothet.R
 import com.example.weatherclothet.data.models.response.WeatherData
 import com.example.weatherclothet.data.models.response.WeatherResponse
@@ -27,11 +27,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomePresenter>(), IHomeCo
     override val presenter: HomePresenter
         get() = HomePresenter(this, WeatherApi())
 
+    private lateinit var progressBar: ProgressBar
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initPrefs()
-        presenter.fetchWeatherData("egypt")
-        setupNextSuggestClickListener()
+        callback()
+        presenter.fetchWeatherData("cairo")
+    }
+
+    private fun callback() {
+        progressBar = binding.progressBar
+
     }
 
     private fun initPrefs() = SharedPrefsUtils.initPrefUtil(requireContext())
@@ -41,17 +49,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomePresenter>(), IHomeCo
     }
 
     override fun showError(error: IOException) {
-        Log.i("t", error.toString())
+        showToast(error)
     }
 
-    private fun setupNextSuggestClickListener() {
-        binding.nextSuggest.setOnClickListener {
-            val currentTemperature =
-                binding.weatherDegree.text?.toString()?.replace("°C", "")?.toDoubleOrNull()
-            if (currentTemperature != null) {
-                updateClothImage(binding, currentTemperature, SharedPrefsUtils)
-            }
-        }
+    override fun showLoading() {
+        progressBar.visibility = View.VISIBLE
+    }
+
+    override fun hideLoading() {
+        progressBar.visibility = View.GONE
     }
 
     private fun updateChipGroup(days: List<WeatherData>) {

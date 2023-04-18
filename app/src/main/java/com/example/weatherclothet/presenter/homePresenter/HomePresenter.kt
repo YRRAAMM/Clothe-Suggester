@@ -12,8 +12,11 @@ class HomePresenter(
 ) : IHomeContract.IPresenter {
 
     override fun fetchWeatherData(city: String) {
+        view.showLoading()
         weatherApi.getWeather(city = city, ::onRequestSuccess, ::onRequestFailed)
+        view.hideLoading()
     }
+
     private val handler = Handler(Looper.getMainLooper())
 
     private fun onRequestSuccess(weatherResponse: WeatherResponse) {
@@ -24,5 +27,6 @@ class HomePresenter(
 
     private fun onRequestFailed(error: IOException) {
         view.showError(error)
+        view.hideLoading()
     }
 }
