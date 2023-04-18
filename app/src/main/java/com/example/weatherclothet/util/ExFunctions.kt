@@ -10,5 +10,7 @@ fun AppCompatActivity.showToast(message: Any) {
 
 
 fun Fragment.showToast(message: Any) {
-    Toast.makeText(requireContext(), message.toString(), Toast.LENGTH_SHORT).show()
+    activity?.runOnUiThread {
+        Toast.makeText(requireContext(), message.toString(), Toast.LENGTH_SHORT).show()
+    }
 }

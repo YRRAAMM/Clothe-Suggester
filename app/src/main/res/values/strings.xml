@@ -1,5 +1,15 @@
 <resources>
     <string name="app_name">Weather Clothet</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sunday">Sunday 9 Apr</string>
+    <string name="monday">Monday 10 Apr</string>
+    <string name="tuesday">Tuesday 11 Apr</string>
+    <string name="wednesday">Wednesday 12 Apr</string>
+    <string name="thursday">Thursday 13 Apr</string>
+    <string name="friday">Friday 14 Apr</string>
+    <string name="today">Today</string>
+    <string name="happy_day_for_you">Happy day for you</string>
+    <string name="baghdad">Baghdad</string>
+    <string name="suggestions">Suggestions</string>
+    <string name="weatherDegree">12 Cٌّّّْْْ</string>
+    <string name="next">Next</string>
 </resources>

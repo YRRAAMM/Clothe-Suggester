@@ -1,77 +1,86 @@
 package com.example.weatherclothet.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.example.weatherclothet.BuildConfig
+import com.example.weatherclothet.R
 import com.example.weatherclothet.data.models.response.WeatherData
+import com.example.weatherclothet.data.models.response.WeatherResponse
+import com.example.weatherclothet.data.services.apiManager.WeatherApi
 import com.example.weatherclothet.databinding.FragmentHomeBinding
 import com.example.weatherclothet.presenter.homePresenter.HomePresenter
 import com.example.weatherclothet.presenter.homePresenter.IHomeContract
 import com.example.weatherclothet.ui.base.BaseFragment
+import com.example.weatherclothet.util.SharedPrefsUtils
+import com.example.weatherclothet.util.WeatherUtils.getDayNameFromTimestamp
+import com.example.weatherclothet.util.WeatherUtils.updateClothImage
+import com.example.weatherclothet.util.WeatherUtils.updateWeatherInfo
 import com.example.weatherclothet.util.showToast
-import com.google.gson.Gson
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
+import com.google.android.material.chip.Chip
 import java.io.IOException
 
 class HomeFragment : BaseFragment<FragmentHomeBinding, HomePresenter>(), IHomeContract.IView {
     override val bindingInflate: (LayoutInflater, ViewGroup?, Boolean) -> FragmentHomeBinding
         get() = FragmentHomeBinding::inflate
     override val presenter: HomePresenter
-        get() = HomePresenter(this)
-
-    private lateinit var gson: Gson
-    private lateinit var okHttpClient: OkHttpClient
+        get() = HomePresenter(this, WeatherApi())
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Initialize Gson and OkHttpClient
-        gson = Gson()
-        okHttpClient = OkHttpClient()
-
-        // Fetch weather data
-        fetchWeatherData()
+        initPrefs()
+        presenter.fetchWeatherData("egypt")
+        setupNextSuggestClickListener()
     }
 
-    private fun fetchWeatherData() {
-        val apiKey = BuildConfig.apiKey // Replace with your OpenWeatherMap API key
-        val apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=Egypt&appid=$apiKey"
+    private fun initPrefs() = SharedPrefsUtils.initPrefUtil(requireContext())
 
-        val request = Request.Builder()
-            .url(apiUrl)
-            .build()
+    override fun showWeatherData(weatherResponse: WeatherResponse) {
+        updateChipGroup(weatherResponse.list)
+    }
 
-        okHttpClient.newCall(request).enqueue(object : okhttp3.Callback {
-            override fun onResponse(call: okhttp3.Call, response: Response) {
-                try {
-                    val body = response.body.string()
-                    val weatherData = gson.fromJson(body, WeatherData::class.java)
+    override fun showError(error: IOException) {
+        Log.i("t", error.toString())
+    }
 
-                    // Access temperature data from weatherData object
-                    val temperature = weatherData?.main?.temp
+    private fun setupNextSuggestClickListener() {
+        binding.nextSuggest.setOnClickListener {
+            val currentTemperature =
+                binding.weatherDegree.text?.toString()?.replace("°C", "")?.toDoubleOrNull()
+            if (currentTemperature != null) {
+                updateClothImage(binding, currentTemperature, SharedPrefsUtils)
+            }
+        }
+    }
 
-                    // Update UI on the main thread
-                    activity?.runOnUiThread {
-                        // Display temperature in your UI
-                        // For example, update a TextView
-                        // textView.text = "Temperature: $temperature"
-                        showToast(temperature.toString())
-//                        binding.temp.text = temperature.toString()
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
+    private fun updateChipGroup(days: List<WeatherData>) {
+        val chipGroup = binding.chipGroup
+        chipGroup.removeAllViews()
+        chipGroup.isSingleSelection = true
+
+        days.forEachIndexed { index, day ->
+            createChip(index, day).let { chip ->
+                chipGroup.addView(chip)
+            }
+        }
+    }
+
+    private fun createChip(index: Int, day: WeatherData): Chip {
+        return Chip(context).apply {
+            text = getDayNameFromTimestamp(day.timestamp)
+            isCheckable = true
+            setChipBackgroundColorResource(R.color.chip_background_color)
+            isChecked = index == 0
+            if (index == 0) {
+                updateWeatherInfo(context, day, binding.weatherDegree, binding.WeatherIcon)
+            }
+            setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    updateWeatherInfo(context, day, binding.weatherDegree, binding.WeatherIcon)
+                    updateClothImage(binding, day.temperature.day, SharedPrefsUtils)
                 }
             }
-
-            override fun onFailure(call: okhttp3.Call, e: IOException) {
-                e.printStackTrace()
-            }
-        })
+        }
     }
-
 }

@@ -1,6 +1,10 @@
 package com.example.weatherclothet.presenter.homePresenter
 
+import android.os.Handler
+import android.os.Looper
+import com.example.weatherclothet.data.models.response.WeatherResponse
 import com.example.weatherclothet.data.services.apiManager.IWeatherApi
+import java.io.IOException
 
 class HomePresenter(
     private val view: IHomeContract.IView,
@@ -8,17 +12,17 @@ class HomePresenter(
 ) : IHomeContract.IPresenter {
 
     override fun fetchWeatherData(city: String) {
-        // Call the API to fetch weather data
-        weatherApi.getWeather(
-            city = city,
-            onSuccess = { weatherData ->
-                // Update UI with weather data
-                view.showWeatherData(weatherData)
-            },
-            onFailed = { exception ->
-                // Show error message
-                view.showError(exception.localizedMessage)
-            }
-        )
+        weatherApi.getWeather(city = city, ::onRequestSuccess, ::onRequestFailed)
+    }
+    private val handler = Handler(Looper.getMainLooper())
+
+    private fun onRequestSuccess(weatherResponse: WeatherResponse) {
+        handler.post {
+            view.showWeatherData(weatherResponse)
+        }
+    }
+
+    private fun onRequestFailed(error: IOException) {
+        view.showError(error)
     }
 }

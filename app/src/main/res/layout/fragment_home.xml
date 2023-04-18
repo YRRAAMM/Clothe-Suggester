@@ -1,21 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.home.HomeFragment">
-
+    android:layout_height="match_parent">
     <TextView
-        android:id="@+id/temp"
+        android:id="@+id/happy_day"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_blank_fragment"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginStart="@dimen/spacing_medium"
+        android:layout_marginTop="@dimen/spacing_xlarge"
+        android:fontFamily="@font/roboto_medium"
+        android:text="@string/happy_day_for_you"
+        android:textColor="@color/tertiary_87"
+        android:textSize="@dimen/text_medium"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_medium"
+        android:drawableStart="@drawable/map_point"
+        android:fontFamily="@font/roboto_medium"
+        android:text="@string/baghdad"
+        android:textColor="@color/tertiary_60"
+        android:textSize="@dimen/font_size_title"
+        android:drawablePadding="@dimen/spacing_small"
+        app:layout_constraintBottom_toBottomOf="@+id/happy_day"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/happy_day" />
+    <TextView
+        android:id="@+id/today"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_large"
+        android:fontFamily="@font/roboto_medium"
+        android:text="@string/today"
+        android:textColor="@color/tertiary_87"
+        android:textSize="@dimen/font_size_title"
+        app:layout_constraintStart_toStartOf="@+id/happy_day"
+        app:layout_constraintTop_toBottomOf="@+id/happy_day" />
+    <View
+        android:id="@+id/weather_card"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/zero"
+        android:layout_margin="@dimen/spacing_medium"
+        android:background="@drawable/image_corner"
+        app:layout_constraintBottom_toTopOf="@+id/Suggestion"
+        app:layout_constraintStart_toStartOf="@+id/Suggestion"
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/today">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_medium"
+            android:layout_marginEnd="@dimen/spacing_medium"
+            android:orientation="horizontal"
+            android:paddingEnd="@dimen/spacing_xlarge"
+            app:chipSpacing="@dimen/spacing_normal"
+            app:singleLine="true"
+            app:singleSelection="true" />
+    </HorizontalScrollView>
+    <TextView
+        android:id="@+id/Suggestion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_medium"
+        android:text="@string/suggestions"
+        android:textColor="@color/tertiary_87"
+        android:textSize="@dimen/font_size_title"
+        android:layout_marginTop="@dimen/spacing_large"
+        app:layout_constraintStart_toStartOf="@+id/happy_day"
+        app:layout_constraintTop_toBottomOf="@+id/weather_card" />
+    <TextView
+        android:id="@+id/nextSuggest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/next"
+        android:fontFamily="@font/roboto_medium"
+        app:layout_constraintTop_toTopOf="@id/Suggestion"
+        app:layout_constraintBottom_toBottomOf="@id/Suggestion"
+        app:layout_constraintEnd_toEndOf="@id/weather_card"
+        android:textSize="@dimen/font_size_title"
+        android:drawableEnd="@drawable/arrow_right"
+        android:background="@drawable/on_press_button"
+        android:drawablePadding="@dimen/spacing_small"
+        />
+    <ImageView
+        android:id="@+id/clothePic"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/zero"
+        android:scaleType="fitCenter"
+        android:layout_margin="@dimen/spacing_medium"
+        android:src="@drawable/summer8"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Suggestion" />
+    <TextView
+        android:id="@+id/weatherDegree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_medium"
+        android:text="@string/weatherDegree"
+        android:textSize="@dimen/spacing_xlarge"
+        android:textStyle="bold"
+        android:textColor="@color/tertiary_60"
+        app:layout_constraintEnd_toStartOf="@+id/WeatherIcon"
+        app:layout_constraintBottom_toBottomOf="@+id/weather_card"
+        app:layout_constraintStart_toStartOf="@+id/weather_card"
+        app:layout_constraintTop_toTopOf="@+id/weather_card" />
+    <ImageView
+        android:id="@+id/WeatherIcon"
+        android:layout_width="@dimen/width_weather"
+        android:layout_height="@dimen/width_weather"
+        android:layout_marginEnd="@dimen/spacing_medium"
+        app:layout_constraintBottom_toBottomOf="@+id/weather_card"
+        app:layout_constraintEnd_toEndOf="@+id/weather_card"
+        app:layout_constraintTop_toTopOf="@+id/weather_card"
+        tools:srcCompat="@drawable/cloud_sun_2"
+        android:layout_marginVertical="@dimen/spacing_medium"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
