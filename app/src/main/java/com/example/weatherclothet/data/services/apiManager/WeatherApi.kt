@@ -1,10 +1,8 @@
 package com.example.weatherclothet.data.services.apiManager
 
 import com.example.weatherclothet.BuildConfig
-import com.example.weatherclothet.data.models.response.WeatherData
 import com.example.weatherclothet.data.models.response.WeatherResponse
 import com.example.weatherclothet.data.services.ApiRequest
-import com.example.weatherclothet.data.services.interceptors.WeatherInterceptor
 import com.example.weatherclothet.util.Constants
 import okhttp3.Call
 import okhttp3.Callback
@@ -21,6 +19,8 @@ class WeatherApi : ApiRequest(), IWeatherApi {
         onSuccess: (WeatherResponse) -> Unit,
         onFailed: (IOException) -> Unit
     ) {
+
+        // todo use url builder
         val url = "${Constants.EndPoints.forecast}?q=$city&appid=${BuildConfig.apiKey}&units=metric"
         val request = getRequest(url)
         client.newCall(request).enqueue(object : Callback {

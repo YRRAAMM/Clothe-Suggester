@@ -12,6 +12,16 @@ object SharedPrefsUtils {
         sharedPreferences = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE)
 
     }
+
+    fun putLong(id: String, lastTimeWorn: Long) {
+        sharedPreferences?.edit()?.putLong(id, lastTimeWorn)?.apply()
+
+    }
+
+    fun getLong(id: String, i: Int): Long {
+        return sharedPreferences?.getLong(id, 0) ?: 0
+    }
+
     var clothName: String?
         get() = sharedPreferences?.getString(KEY,null)
         set(value) {
